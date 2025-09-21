@@ -52,7 +52,7 @@ running the following commands:
 cd /path/to/paru/repository
 bundle install
 rake build
-gem install pkg/paru-1.5.0.gem
+gem install pkg/paru-1.5.1.gem
 ```
 
 Paru, obviously, requires pandoc. See
@@ -125,13 +125,13 @@ program, paru-style:
 
 ``` ruby
 #!/usr/bin/env ruby
-require "paru/pandoc"
+require 'paru/pandoc'
 
-input = "Hello world, from **pandoc**"
+input = 'Hello world, from **pandoc**'
 
 output = Paru::Pandoc.new do
-    from "markdown"
-    to "html"
+  from 'markdown'
+  to 'html'
 end << input
 
 puts output
@@ -263,8 +263,10 @@ The library module `Pandoc2Yaml` has one method, `extract_metadata` that
 takes one argument, the path to a pandoc markdown file.
 
 ``` ruby
+# frozen_string_literal: true
+
 #--
-# Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
+# Copyright 2015--2025 Huub de Beer <Huub@heerdebeer.org>
 #
 # This file is part of Paru
 #
@@ -281,58 +283,65 @@ takes one argument, the path to a pandoc markdown file.
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require "json"
-require_relative "./pandoc.rb"
+require 'json'
+require_relative 'pandoc'
 
 module Paru
-    # Utility class to extract YAML metadata form a markdown file in pandoc's
-    # own markdown format.
-    class Pandoc2Yaml
-        # Paru converters:
-        # Note. When converting metadata back to the pandoc markdown format, you have
-        # to use the option "standalone", otherwise the metadata is skipped
+  # Utility class to extract YAML metadata form a markdown file in pandoc's
+  # own markdown format.
+  class Pandoc2Yaml
+    # Paru converters:
+    # Note. When converting metadata back to the pandoc markdown format, you have
+    # to use the option "standalone", otherwise the metadata is skipped
 
-        # Converter from pandoc's markdown to pandoc's AST JSON
-        PANDOC_2_JSON = Paru::Pandoc.new {from "markdown"; to "json"}
-
-        # Converter from pandoc's AST JSON back to pandoc. Note the
-        # 'standalone' property, which is needed to output the metadata as
-        # well.
-        JSON_2_PANDOC = Paru::Pandoc.new {from "json"; to "markdown"; standalone}
-
-        # When converting a pandoc document to JSON, or vice versa, the JSON object
-        # has the following three properties:
-        
-        # Pandoc-type API version key
-        VERSION = "pandoc-api-version"
-        # Meta block key
-        META = "meta"
-        # Content's blocks key
-        BLOCKS = "blocks"
-
-        # Extract the YAML metadata from input document
-        #
-        # @param input_document [String] path to input document
-        # @return [String] YAML metadata from input document on STDOUT
-        def self.extract_metadata input_document
-            json = JSON.parse(PANDOC_2_JSON << File.read(input_document))
-            yaml = ""
-
-            version, metadata = json.values_at(VERSION, META)
-
-            if not metadata.empty? then
-                metadata_document = {
-                    VERSION => version, 
-                    META => metadata, 
-                    BLOCKS => []
-                }
-
-                yaml = JSON_2_PANDOC << JSON.generate(metadata_document)
-            end
-
-            yaml
-        end
+    # Converter from pandoc's markdown to pandoc's AST JSON
+    PANDOC_2_JSON = Paru::Pandoc.new do
+      from 'markdown'
+      to 'json'
     end
+
+    # Converter from pandoc's AST JSON back to pandoc. Note the
+    # 'standalone' property, which is needed to output the metadata as
+    # well.
+    JSON_2_PANDOC = Paru::Pandoc.new do
+      from 'json'
+      to 'markdown'
+      standalone
+    end
+
+    # When converting a pandoc document to JSON, or vice versa, the JSON object
+    # has the following three properties:
+
+    # Pandoc-type API version key
+    VERSION = 'pandoc-api-version'
+    # Meta block key
+    META = 'meta'
+    # Content's blocks key
+    BLOCKS = 'blocks'
+
+    # Extract the YAML metadata from input document
+    #
+    # @param input_document [String] path to input document
+    # @return [String] YAML metadata from input document on STDOUT
+    def self.extract_metadata(input_document)
+      json = JSON.parse(PANDOC_2_JSON << File.read(input_document))
+      yaml = ''
+
+      version, metadata = json.values_at(VERSION, META)
+
+      unless metadata.empty?
+        metadata_document = {
+          VERSION => version,
+          META => metadata,
+          BLOCKS => []
+        }
+
+        yaml = JSON_2_PANDOC << JSON.generate(metadata_document)
+      end
+
+      yaml
+    end
+  end
 end
 ```
 
@@ -492,10 +501,10 @@ nothing:
 ``` ruby
 #!/usr/bin/env ruby
 # Identity filter
-require "paru/filter"
+require 'paru/filter'
 
 Paru::Filter.run do
-    # nothing
+  # nothing
 end
 ```
 
@@ -526,15 +535,15 @@ filter that does this numbering of figures automatically as well:
 ``` ruby
 #!/usr/bin/env ruby
 # Number all figures in a document and prefix the caption with "Figure".
-require "paru/filter"
+require 'paru/filter'
 
-figure_counter = 0;
+figure_counter = 0
 
-Paru::Filter.run do 
-    with "Image" do |image|
-        figure_counter += 1
-        image.inner_markdown = "Figure #{figure_counter}. #{image.inner_markdown}"
-    end
+Paru::Filter.run do
+  with 'Image' do |image|
+    figure_counter += 1
+    image.inner_markdown = "Figure #{figure_counter}. #{image.inner_markdown}"
+  end
 end
 ```
 
@@ -595,34 +604,34 @@ chapters, sections, and figures as follows:
 
 ``` ruby
 #!/usr/bin/env ruby
-require "paru/filter"
+require 'paru/filter'
 
 current_chapter = 0
 current_section = 0
 current_figure = 0
 
 Paru::Filter.run do
-    with "Header" do |header|
-        if header.level == 1 
-            current_chapter += 1
-            current_figure = 0
-            current_section = 0
+  with 'Header' do |header|
+    if header.level == 1
+      current_chapter += 1
+      current_figure = 0
+      current_section = 0
 
-            header.inner_markdown = "Chapter #{current_chapter}. #{header.inner_markdown}"
-        end
-
-        if header.level == 2
-          current_section += 1
-          header.inner_markdown = 
-            "#{current_chapter}.#{current_section} #{header.inner_markdown}"
-        end
+      header.inner_markdown = "Chapter #{current_chapter}. #{header.inner_markdown}"
     end
 
-    with "Header + Image" do |image|
-        current_figure += 1
-        image.inner_markdown = 
-          "Figure #{current_chapter}.#{current_figure} #{image.inner_markdown}"
+    if header.level == 2
+      current_section += 1
+      header.inner_markdown =
+        "#{current_chapter}.#{current_section} #{header.inner_markdown}"
     end
+  end
+
+  with 'Header + Image' do |image|
+    current_figure += 1
+    image.inner_markdown =
+      "Figure #{current_chapter}.#{current_figure} #{image.inner_markdown}"
+  end
 end
 ```
 
@@ -667,18 +676,17 @@ of 1 nodes from a header like so:
 ``` ruby
 #!/usr/bin/env ruby
 # Capitalize the first N characters of a paragraph
-require "paru/filter"
+require 'paru/filter'
 
 END_CAPITAL = 10
-Paru::Filter.run do 
-    with "Header +1 Para" do |p|
-        text = p.inner_markdown
-        first_line = text.slice(0, END_CAPITAL).upcase
-        rest = text.slice(END_CAPITAL, text.size)
-        p.inner_markdown = first_line + rest
-    end
+Paru::Filter.run do
+  with 'Header +1 Para' do |p|
+    text = p.inner_markdown
+    first_line = text.slice(0, END_CAPITAL).upcase
+    rest = text.slice(END_CAPITAL, text.size)
+    p.inner_markdown = first_line + rest
+  end
 end
-
 ```
 
 Of course, just taking the first N letters to capitalize does not work
@@ -706,22 +714,21 @@ you can automatically number the example blocks by selecting all
 ``` ruby
 #!/usr/bin/env ruby
 # Annotate custom blocks: example blocks and important blocks
-require "paru/filter"
+require 'paru/filter'
 
 example_count = 0
 
 Paru::Filter.run do
-    with "Div.example > Header" do |header|
-        if header.level == 3 
-            example_count += 1
-            header.inner_markdown = "Example #{example_count}: #{header.inner_markdown}"
-        end
+  with 'Div.example > Header' do |header|
+    if header.level == 3
+      example_count += 1
+      header.inner_markdown = "Example #{example_count}: #{header.inner_markdown}"
     end
+  end
 
-    with "Div.important" do |d|
-        d.inner_markdown = d.inner_markdown + "\n\n*(important)*"
-    end
-
+  with 'Div.important' do |d|
+    d.inner_markdown = d.inner_markdown + "\n\n*(important)*"
+  end
 end
 ```
 
@@ -743,20 +750,19 @@ be created with a paru filter quite easily:
 
 ``` ruby
 #!/usr/bin/env ruby
-require "paru/filter"
+require 'paru/filter'
 
-Paru::Filter.run do 
-  with "Para" do |paragraph|
+Paru::Filter.run do
+  with 'Para' do |paragraph|
     if paragraph.inner_markdown.lines.length == 1
-      command, path = paragraph.inner_markdown.strip.split " "
-      if command == "::paru::insert"
-        markdown = File.read path.gsub(/\\_/, "_")
+      command, path = paragraph.inner_markdown.strip.split ' '
+      if command == '::paru::insert'
+        markdown = File.read path.gsub('\\_', '_')
         paragraph.markdown = markdown
       end
     end
   end
 end
-
 ```
 
 The filter `insert_document.rb` inspects each *Para*graph. If it is
@@ -781,15 +787,15 @@ more simple that inserting markdown files!:
 
 ``` ruby
 #!/usr/bin/env ruby
-require "paru/filter"
+require 'paru/filter'
 
-Paru::Filter.run do 
-  with "CodeBlock" do |code_block|
-    command, path, *classes = code_block.string.strip.split " "
-    if command == "::paru::insert"
-      code_block.string = File.read path.gsub(/\\_/, "_")
+Paru::Filter.run do
+  with 'CodeBlock' do |code_block|
+    command, path, *classes = code_block.string.strip.split ' '
+    if command == '::paru::insert'
+      code_block.string = File.read path.gsub('\\_', '_')
       code_block.string.force_encoding('UTF-8')
-      classes.each {|c| code_block.attr.classes.push c}
+      classes.each { |c| code_block.attr.classes.push c }
     end
   end
 end
@@ -819,20 +825,20 @@ parts, see:
 #!/usr/bin/env ruby
 # Simple filter to show of the before, after and any selector. It should first
 # print "before", then "during" for each node, and finish with "after".
-require "paru/filter"
+require 'paru/filter'
 
 Paru::Filter.run do
-    before do 
-      warn "before"  
-    end
+  before do
+    warn 'before'
+  end
 
-    with "*" do
-      warn "during"
-    end
+  with '*' do
+    warn 'during'
+  end
 
-    after do
-      warn "after"
-    end
+  after do
+    warn 'after'
+  end
 end
 ```
 
@@ -853,11 +859,11 @@ configuration from the metadata if there is such a property:
 
 ``` ruby
 #!/usr/bin/env ruby
-require "paru/filter"
+require 'paru/filter'
 
-Paru::Filter.run do 
+Paru::Filter.run do
   before do
-    metadata.delete "pandoc"
+    metadata.delete 'pandoc'
   end
 end
 ```
@@ -869,6 +875,62 @@ time it is run by `do-pandoc.rb`.
 For more information about manipulating metadata, see [the API
 documentation of the
 MetaMap](https://heerdebeer.org/Software/markdown/paru/documentation/api-doc/Paru/PandocFilter/MetaMap.html).
+
+### Using simple strings only in metadata
+
+If you're using pandoc markdown and have metadata in title blocks or
+YAML blocks, metadata string values will be parsed as pandoc's markdown.
+In the AST representation of your document, they have types
+`MetaInlines` or `MetaBlocks`. Paru uses pandoc to convert these AST
+nodes into a string representation to offer you access to the metadata
+strings as markdown strings.
+
+However, running a separate pandoc process to convert metadata to
+strings is expensive. Particularly so when you don't use pandoc's title
+blocks or YAML blocks. If you're setting metadata only via the
+command-line option `--metadata`, pandoc parses these string values as
+`MetaString` type values. These strings are basically plain text.
+
+In this situation, it is a waste to use pandoc to convert the strings to
+strings as the result strings are the same as the source strings. Use
+feature toggle `treat_metadata_strings_as_plain_strings` to change
+paru's default behavior of using pandoc to convert metadata strings to
+strings. Instead, when this toggle is on, paru uses the strings as is
+without a conversion step.
+
+**Note** Whenever there's a single non-`MetaString` metadata string
+value in your metadata, this option won't have an effect. Then the
+default behavior is used instead. In other words, when you mix setting
+metadata via command-line options and title or YAML blocks, this toggle
+doesn't have an effect.
+
+In other words, this feature toggle is mostly useful when you're *not*
+using pandoc's own markdown format in your conversion or filters.
+
+To use this feature toggle, add argument
+`treat_metadata_strings_as_plain_strings: true` when calling the filter
+constructor or method `Filter#run`. For example:
+
+``` ruby
+#!/usr/bin/env ruby
+# Annotate custom blocks: example blocks and important blocks
+require 'paru/filter'
+
+example_count = 0
+
+Paru::Filter.run(treat_metadata_strings_as_plain_strings: true) do
+  with 'Div.example > Header' do |header|
+    if header.level == 3
+      example_count += 1
+      header.inner_markdown = "Example #{example_count}: #{header.inner_markdown}"
+    end
+  end
+
+  with 'Div.important' do |d|
+    d.inner_markdown = d.inner_markdown + "\n\n*(important)*"
+  end
+end
+```
 
 # Chapter 4. Putting it all together {#putting-it-all-together}
 

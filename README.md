@@ -76,7 +76,7 @@ running the following commands:
 cd /path/to/paru/repository
 bundle install
 rake build
-gem install pkg/paru-1.5.0.gem
+gem install pkg/paru-1.5.1.gem
 ```
 
 Paru, obviously, requires pandoc. See
@@ -135,13 +135,13 @@ program, paru-style:
 
 ``` ruby
 #!/usr/bin/env ruby
-require "paru/pandoc"
+require 'paru/pandoc'
 
-input = "Hello world, from **pandoc**"
+input = 'Hello world, from **pandoc**'
 
 output = Paru::Pandoc.new do
-    from "markdown"
-    to "html"
+  from 'markdown'
+  to 'html'
 end << input
 
 puts output
@@ -180,10 +180,10 @@ nothing:
 ``` ruby
 #!/usr/bin/env ruby
 # Identity filter
-require "paru/filter"
+require 'paru/filter'
 
 Paru::Filter.run do
-    # nothing
+  # nothing
 end
 ```
 
@@ -203,15 +203,15 @@ numbering of figures automatically as well:
 ``` ruby
 #!/usr/bin/env ruby
 # Number all figures in a document and prefix the caption with "Figure".
-require "paru/filter"
+require 'paru/filter'
 
-figure_counter = 0;
+figure_counter = 0
 
-Paru::Filter.run do 
-    with "Image" do |image|
-        figure_counter += 1
-        image.inner_markdown = "Figure #{figure_counter}. #{image.inner_markdown}"
-    end
+Paru::Filter.run do
+  with 'Image' do |image|
+    figure_counter += 1
+    image.inner_markdown = "Figure #{figure_counter}. #{image.inner_markdown}"
+  end
 end
 ```
 
