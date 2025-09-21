@@ -34,10 +34,10 @@ module Paru
   # that selector expression or not.
   class Selector
     # Pseudo selector to select any inline and block node
-    ANY_SELECTOR = '*'
+    ANY_SELECTOR = '*'.freeze
 
     # All pseudo selectors
-    PSEUDO_SELECTORS = [ANY_SELECTOR]
+    PSEUDO_SELECTORS = [ANY_SELECTOR].freeze
 
     # Create a new Selector based on the selector string
     #
@@ -70,16 +70,16 @@ module Paru
 
     private
 
-    S = /\s*/
+    S = /\s*/.freeze
     # Improved CSS class selector taken from https://stackoverflow.com/questions/448981/which-characters-are-valid-in-css-class-names-selectors/449000#449000
-    CLASS = /(\.-?[_a-zA-Z]+[_a-zA-Z0-9-]*)/
-    TYPE = /(?<type>(?<name>[A-Z][a-zA-Z]*|\*)(?<classes>#{CLASS}*))/
-    OTHER_TYPE = /(?<other_type>(?<other_name>[A-Z][a-zA-Z]*)(?<other_classes>#{CLASS}*))/
-    OPERATOR = /(?<operator>\+|-|>)/
-    DISTANCE = /(?<distance>[1-9][0-9]*)/
-    RELATION = /(?<relation>#{S}#{OTHER_TYPE}#{S}#{OPERATOR}#{S}#{DISTANCE}?#{S})/
-    RELATIONS = /(?<relations>#{RELATION}+)/
-    SELECTOR = /\A#{S}(?<selector>#{RELATIONS}?#{S}#{TYPE})#{S}\Z/
+    CLASS = /(\.-?[_a-zA-Z]+[_a-zA-Z0-9-]*)/.freeze
+    TYPE = /(?<type>(?<name>[A-Z][a-zA-Z]*|\*)(?<classes>#{CLASS}*))/.freeze
+    OTHER_TYPE = /(?<other_type>(?<other_name>[A-Z][a-zA-Z]*)(?<other_classes>#{CLASS}*))/.freeze
+    OPERATOR = /(?<operator>\+|-|>)/.freeze
+    DISTANCE = /(?<distance>[1-9][0-9]*)/.freeze
+    RELATION = /(?<relation>#{S}#{OTHER_TYPE}#{S}#{OPERATOR}#{S}#{DISTANCE}?#{S})/.freeze
+    RELATIONS = /(?<relations>#{RELATION}+)/.freeze
+    SELECTOR = /\A#{S}(?<selector>#{RELATIONS}?#{S}#{TYPE})#{S}\Z/.freeze
 
     # Parse the selector_string to construct this Selector
     def parse(selector_string)
@@ -105,30 +105,30 @@ module Paru
     alias pandoc_type? is_pandoc_type
 
     def expect(parts, part)
-      raise SelectorParseError.new "Expected #{part}" if parts[part].nil?
+      raise SelectorParseError, "Expected #{part}" if parts[part].nil?
 
       parts[part]
     end
 
     def expect_match(regexp, string)
       match = regexp.match string
-      raise SelectorParseError.new "Unable to parse '#{string}'" if match.nil?
+      raise SelectorParseError, "Unable to parse '#{string}'" if match.nil?
 
       match
     end
 
     def expect_pandoc_type(parts)
       type = expect parts, :name
-      classes = parts[:classes].split('.').select { |c| !c.empty? } unless parts[:classes].nil?
-      raise SelectorParseError.new "Expected a Pandoc type, got '#{type}' instead" unless is_pandoc_type type
+      classes = parts[:classes].split('.').reject(&:empty?) unless parts[:classes].nil?
+      raise SelectorParseError, "Expected a Pandoc type, got '#{type}' instead" unless is_pandoc_type type
 
       [type, classes]
     end
 
     def expect_pandoc_other_type(parts)
       type = expect parts, :other_name
-      classes = parts[:other_classes].split('.').select { |c| !c.empty? } unless parts[:other_classes].nil?
-      raise SelectorParseError.new "Expected a Pandoc type, got '#{type}' instead" unless is_pandoc_type type
+      classes = parts[:other_classes].split('.').reject(&:empty?) unless parts[:other_classes].nil?
+      raise SelectorParseError, "Expected a Pandoc type, got '#{type}' instead" unless is_pandoc_type type
 
       [type, classes]
     end
@@ -138,7 +138,7 @@ module Paru
         number = 0
       else
         number = parts[part].to_i
-        raise SelectorParseError.new "Expected a positive #{part}, got '#{parts[part]}' instead" if number <= 0
+        raise SelectorParseError, "Expected a positive #{part}, got '#{parts[part]}' instead" if number <= 0
       end
       number
     end
@@ -196,13 +196,15 @@ module Paru
       distance = 0
       parent = nil
       begin
-        distance += 1 if @distance > 0
+        distance += 1 if @distance.positive?
         node = parent unless parent.nil?
         parent = node.parent
         ancestry = parent.type == @type and @classes.all? { |c| parent.has_class? c }
-      end while !ancestry and !parent.is_root? and distance <= @distance
+      end while !ancestry && !parent.is_root? && distance <= @distance
       ancestry
     end
+
+    alias descendant? is_descendant?
 
     def previous(filtered_nodes, distance)
       distance = [distance, filtered_nodes.size - 1].min
