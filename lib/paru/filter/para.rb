@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,29 +18,28 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./block.rb"
-require_relative "./inner_markdown.rb"
+require_relative 'block'
+require_relative 'inner_markdown'
 
 module Paru
-    module PandocFilter
-        # A Para is a paragraph: a list of Inline nodes
-        class Para < Block
-            include InnerMarkdown
+  module PandocFilter
+    # A Para is a paragraph: a list of Inline nodes
+    class Para < Block
+      include InnerMarkdown
 
-            # Create a new Para node based on the contents
-            #
-            # @param contents [Array]
-            def initialize(contents)
-                super contents, true
-            end
+      # Create a new Para node based on the contents
+      #
+      # @param contents [Array]
+      def initialize(contents)
+        super(contents, true)
+      end
 
-            # Does a Para have inline content?
-            #
-            # @return [Boolean] true
-            def has_inline?
-                true
-            end
-
-        end
+      # Does a Para have inline content?
+      #
+      # @return [Boolean] true
+      def has_inline?
+        true
+      end
     end
+  end
 end

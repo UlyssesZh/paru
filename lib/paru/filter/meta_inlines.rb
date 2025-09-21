@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,14 +18,14 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./node.rb"
-require_relative "./inner_markdown.rb"
+require_relative 'node'
+require_relative 'inner_markdown'
 
 module Paru
-    module PandocFilter
-        # A MetaInlines node contains a list of {Inline} nodes
-        class MetaInlines < Node
-            include InnerMarkdown
-        end
+  module PandocFilter
+    # A MetaInlines node contains a list of {Inline} nodes
+    class MetaInlines < Node
+      include InnerMarkdown
     end
+  end
 end

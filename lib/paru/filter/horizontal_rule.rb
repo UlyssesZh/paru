@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,12 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./empty_block.rb"
+require_relative 'empty_block'
 
 module Paru
-    module PandocFilter
-        # HorizontalRule
-        class HorizontalRule < EmptyBlock
-        end
+  module PandocFilter
+    # HorizontalRule
+    class HorizontalRule < EmptyBlock
     end
+  end
 end

@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 #--
-# Copyright 2020, 2023 Huub de Beer <Huub@heerdebeer.org>
+# Copyright 2020--2025 Huub de Beer <Huub@heerdebeer.org>
 #
 # This file is part of Paru
 #
@@ -16,60 +18,60 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./block.rb"
-require_relative "./inner_markdown.rb"
-require_relative "./short_caption.rb"
+require_relative 'block'
+require_relative 'inner_markdown'
+require_relative 'short_caption'
 
 module Paru
-    module PandocFilter
-        # A table or figure's caption, can contain an optional short caption
-        class Caption < Block
-            include InnerMarkdown
+  module PandocFilter
+    # A table or figure's caption, can contain an optional short caption
+    class Caption < Block
+      include InnerMarkdown
 
-            attr_accessor :short  
+      attr_accessor :short
 
-            # Create a new Caption based on the contents
-            #
-            # @param contents [Array]
-            def initialize(contents)
-                if contents[0].nil?
-                  @short = nil
-                else
-                  @short = ShortCaption.new contents[0]
-                end
-                super(contents[1])
-            end
+      # Create a new Caption based on the contents
+      #
+      # @param contents [Array]
+      def initialize(contents)
+        @short = if contents[0].nil?
+                   nil
+                 else
+                   ShortCaption.new contents[0]
+                 end
+        super(contents[1])
+      end
 
-            # Does this Caption have a short caption?
-            #
-            # @return [Boolean]
-            def has_short?()
-                not @short.nil?
-            end
+      # Does this Caption have a short caption?
+      #
+      # @return [Boolean]
+      def has_short?
+        !@short.nil?
+      end
 
-            # Has this node a block?
-            #
-            # @return [Boolean] true
-            def has_block?
-                true
-            end
+      # Has this node a block?
+      #
+      # @return [Boolean] true
+      def has_block?
+        true
+      end
 
-            # The AST contents of this Caption node
-            #
-            # @return [Array]
-            def ast_contents()
-                [
-                  if has_short? then @short.to_ast else nil end,
-                  @children.map {|row| row.to_ast}
-                ]
-            end
+      # The AST contents of this Caption node
+      #
+      # @return [Array]
+      def ast_contents
+        [
+          has_short? ? @short.to_ast : nil,
+          @children.map(&:to_ast)
+        ]
+      end
 
-            # Create an AST representation of this Node
-            #
-            # @return [Hash]
-            def to_ast()
-              ast_contents()
-            end
-        end
+      # Create an AST representation of this Node
+      #
+      # @return [Hash]
+      def to_ast
+        ast_contents
+      end
     end
+  end
 end

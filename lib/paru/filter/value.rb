@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2020 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,91 +18,88 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./node.rb"
-require_relative "../filter_error.rb"
+require_relative 'node'
+require_relative '../filter_error'
 
 module Paru
-    module PandocFilter
+  module PandocFilter
+    # Values without value are encoded in their type name.
+    VALUE_ENCODED_IN_TYPE_NAME = :value_encoded_in_type_name
 
-        # Values without value are encoded in their type name.
-        VALUE_ENCODED_IN_TYPE_NAME = :value_encoded_in_type_name
+    # A Value node that represents some sort of metadata about block or
+    # inline nodes
+    class Value < Node
+      # Create a new Value with contents. Also indicate if this node has
+      # inline children or block children.
+      #
+      # @param contents [Array<pandoc node in JSON> = []] the contents of
+      #   this node
+      def initialize(contents)
+        @type = contents['t']
 
-        # A Value node that represents some sort of metadata about block or
-        # inline nodes
-        class Value < Node
+        @value = if contents.key? 'c'
+                   contents['c']
+                 else
+                   VALUE_ENCODED_IN_TYPE_NAME
+                 end
+      end
 
-            # Create a new Value with contents. Also indicate if this node has
-            # inline children or block children.
-            #
-            # @param contents [Array<pandoc node in JSON> = []] the contents of
-            #   this node
-            def initialize(contents)
-                @type = contents['t']
-
-                if contents.has_key? 'c' then
-                  @value = contents['c']
-                else
-                  @value = VALUE_ENCODED_IN_TYPE_NAME
-                end
-            end
-
-            # Get the encoded value
-            #
-            # @return [Any] 
-            def value()
-                if type_encodes_value? then
-                    @type
-                else
-                    @value
-                end
-            end
-
-            # Set the encoded value
-            #
-            # @param [Any] new_value
-            def value=(new_value)
-                if type_encodes_value? then
-                  @type = new_value
-                else
-                  @value = new_value
-                end
-            end
-
-            # Is this node a block?
-            #
-            # @return [Boolean] false
-            def is_block?
-                false
-            end
-
-            # Is this node an inline node?
-            #
-            # @return [Boolean] false
-            def is_inline?
-                false
-            end
-
-            # The AST type of this Node
-            #
-            # @return [String]
-            def ast_type()
-                @type
-            end
-
-            # Create an AST representation of this Node
-            #
-            # @return [Hash]
-            def to_ast()
-                return {
-                    "t" => ast_type,
-                    "c" => if type_encodes_value? then nil else @value end
-                }
-            end
-
-            @private
-            def type_encodes_value?()
-                return @value == VALUE_ENCODED_IN_TYPE_NAME
-            end
+      # Get the encoded value
+      #
+      # @return [Any]
+      def value
+        if type_encodes_value?
+          @type
+        else
+          @value
         end
+      end
+
+      # Set the encoded value
+      #
+      # @param [Any] new_value
+      def value=(new_value)
+        if type_encodes_value?
+          @type = new_value
+        else
+          @value = new_value
+        end
+      end
+
+      # Is this node a block?
+      #
+      # @return [Boolean] false
+      def is_block?
+        false
+      end
+
+      # Is this node an inline node?
+      #
+      # @return [Boolean] false
+      def is_inline?
+        false
+      end
+
+      # The AST type of this Node
+      #
+      # @return [String]
+      def ast_type
+        @type
+      end
+
+      # Create an AST representation of this Node
+      #
+      # @return [Hash]
+      def to_ast
+        {
+          't' => ast_type,
+          'c' => type_encodes_value? ? nil : @value
+        }
+      end
+
+      def type_encodes_value?
+        @value == VALUE_ENCODED_IN_TYPE_NAME
+      end
     end
+  end
 end

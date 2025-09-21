@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2023 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,50 +18,50 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./block.rb"
-require_relative "./attr.rb"
-require_relative "./caption.rb"
-require_relative "./inner_markdown.rb"
+require_relative 'block'
+require_relative 'attr'
+require_relative 'caption'
+require_relative 'inner_markdown'
 
 module Paru
-    module PandocFilter
-        # A Figure node consisting of an attribute object, a caption, and a list of Block nodes.
-        class Figure < Block
-            include InnerMarkdown
+  module PandocFilter
+    # A Figure node consisting of an attribute object, a caption, and a list of Block nodes.
+    class Figure < Block
+      include InnerMarkdown
 
-            # A Figure node has an attribute object
-            #
-            # @!attribute attr
-            #   @return [Attr]
-            #
-            # @!attribute caption
-            #   @return Caption
-            attr_accessor :attr, :caption
+      # A Figure node has an attribute object
+      #
+      # @!attribute attr
+      #   @return [Attr]
+      #
+      # @!attribute caption
+      #   @return Caption
+      attr_accessor :attr, :caption
 
-            # Create a new Figure node based on the contents
-            #
-            # @param contents [Array] 
-            def initialize(contents)
-                @attr = Attr.new contents[0]
-                @caption = Caption.new contents[1]
-                super contents[2]
-            end
+      # Create a new Figure node based on the contents
+      #
+      # @param contents [Array]
+      def initialize(contents)
+        @attr = Attr.new contents[0]
+        @caption = Caption.new contents[1]
+        super(contents[2])
+      end
 
-            # Create an AST representation of this Figure node.
-            def ast_contents()
-                [
-                    @attr.to_ast,
-                    @caption.to_ast,
-                    super
-                ]
-            end
+      # Create an AST representation of this Figure node.
+      def ast_contents
+        [
+          @attr.to_ast,
+          @caption.to_ast,
+          super
+        ]
+      end
 
-            # Has this Figure node Blocks as children?
-            #
-            # @return [Boolean] true
-            def has_block?
-                true
-            end
-        end
+      # Has this Figure node Blocks as children?
+      #
+      # @return [Boolean] true
+      def has_block?
+        true
+      end
     end
+  end
 end

@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 #--
-# Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
+# Copyright 2015--2025 Huub de Beer <Huub@heerdebeer.org>
 #
 # This file is part of Paru
 #
@@ -16,10 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./error.rb"
+require_relative 'error'
 
 module Paru
-    # A FilterError raised when there is an error while running a filter.
-    class FilterError < Error
-    end
+  # A FilterError raised when there is an error while running a filter.
+  class FilterError < Error
+  end
 end

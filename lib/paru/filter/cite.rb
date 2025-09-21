@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 #--
-# Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
+# Copyright 2015--2025 Huub de Beer <Huub@heerdebeer.org>
 #
 # This file is part of Paru
 #
@@ -16,42 +18,41 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./inline.rb"
-require_relative "./citation.rb"
+require_relative 'inline'
+require_relative 'citation'
 
 module Paru
-    module PandocFilter
-        # A Cite node, consisting of a list of Citation nodes, and a list of
-        # Inline nodes
-        #
-        # @!attribute citations
-        #   @return [Array<Citation>]
-        class Cite < Inline
-            attr_accessor :citations
+  module PandocFilter
+    # A Cite node, consisting of a list of Citation nodes, and a list of
+    # Inline nodes
+    #
+    # @!attribute citations
+    #   @return [Array<Citation>]
+    class Cite < Inline
+      attr_accessor :citations
 
-            # Create a new Cite node
-            #
-            # @param contents [Array] an array containing a list of citations
-            #   and a list of inline nodes
-            def initialize(contents)
-                super contents[1]
-                @citations = []
-                contents[0].each do |citation|
-                    @citations.push Citation.new(citation)
-                end
-            end
-
-            # Create an AST representation of this Cite node.
-            def ast_contents()
-                [
-                    @citations.map {|citation| citation.to_ast},
-                    super
-                ]
-            end
-
-            #undef_method :inner_markdown
-            #undef_method :inner_markdown=
+      # Create a new Cite node
+      #
+      # @param contents [Array] an array containing a list of citations
+      #   and a list of inline nodes
+      def initialize(contents)
+        super(contents[1])
+        @citations = []
+        contents[0].each do |citation|
+          @citations.push Citation.new(citation)
         end
-    end
-end
+      end
 
+      # Create an AST representation of this Cite node.
+      def ast_contents
+        [
+          @citations.map(&:to_ast),
+          super
+        ]
+      end
+
+      # undef_method :inner_markdown
+      # undef_method :inner_markdown=
+    end
+  end
+end

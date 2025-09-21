@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,31 +18,30 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./inline.rb"
+require_relative 'inline'
 
 module Paru
-    module PandocFilter
-        # An EmptyInline node, has no content
-        class EmptyInline < Inline
+  module PandocFilter
+    # An EmptyInline node, has no content
+    class EmptyInline < Inline
+      # Create an EmptyInline node
+      def initialize(_)
+        super([])
+      end
 
-            # Create an EmptyInline node
-            def initialize _
-                super []
-            end
+      # Has this empty inline contents?
+      #
+      # @return [Boolean] false
+      def has_inline?
+        false
+      end
 
-            # Has this empty inline contents?
-            #
-            # @return [Boolean] false
-            def has_inline?
-                false
-            end
-
-            # Create an AST representation of this EmptyInline
-            def to_ast
-                {
-                    "t" => ast_type
-                }
-            end
-        end
+      # Create an AST representation of this EmptyInline
+      def to_ast
+        {
+          't' => ast_type
+        }
+      end
     end
+  end
 end

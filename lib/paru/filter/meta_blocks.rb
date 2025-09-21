@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,12 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./node.rb"
+require_relative 'node'
 
 module Paru
-    module PandocFilter
-        # A MetaBlocks Node contains a list of {Block} nodes
-        class MetaBlocks < Node
-        end
+  module PandocFilter
+    # A MetaBlocks Node contains a list of {Block} nodes
+    class MetaBlocks < Node
     end
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,31 +18,30 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./node.rb"
+require_relative 'node'
 
 module Paru
-    module PandocFilter
-        # Version is a general Node containing the pandoc-api-version. It has
-        # the format major.minor.revision.sub
-        class Version < Node
+  module PandocFilter
+    # Version is a general Node containing the pandoc-api-version. It has
+    # the format major.minor.revision.sub
+    class Version < Node
+      # Create a Version node based on contents
+      #
+      # @param contents [Array<Integer>] a list with api, major, minor,
+      # revision number
+      def initialize(contents)
+        @api, @major, @minor, @revision = contents
+      end
 
-            # Create a Version node based on contents
-            #
-            # @param contents [Array<Integer>] a list with api, major, minor,
-            # revision number
-            def initialize(contents)
-                @api, @major, @minor, @revision = contents
-            end
+      # The AST type is "pandoc-api-version"
+      def ast_type
+        'pandoc-api-version'
+      end
 
-            # The AST type is "pandoc-api-version"
-            def ast_type
-                "pandoc-api-version"
-            end        
-
-            # Create an AST representation of this Version
-            def to_ast()
-                [@api, @major, @minor, @revision].select {|v| !v.nil?}
-            end
-        end
+      # Create an AST representation of this Version
+      def to_ast
+        [@api, @major, @minor, @revision].compact
+      end
     end
+  end
 end

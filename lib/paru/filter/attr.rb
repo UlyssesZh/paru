@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 #--
-# Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
+# Copyright 2015--2025 Huub de Beer <Huub@heerdebeer.org>
 #
 # This file is part of Paru
 #
@@ -17,82 +19,86 @@
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
 module Paru
-    module PandocFilter
-        # Attr represents an attribute object for a node. It contains of an id, a
-        # list of class names and a list of key-value pairs. 
-        #
-        # @see https://hackage.haskell.org/package/pandoc-types-1.17.0.5/docs/Text-Pandoc-Definition.html#t:Attr
-        #
-        # @!attribute id
-        #   @return [String]
-        #
-        # @!attribute classes
-        #   @return [Array<String>]
-        class Attr
-            include Enumerable
+  module PandocFilter
+    # Attr represents an attribute object for a node. It contains of an id, a
+    # list of class names and a list of key-value pairs.
+    #
+    # @see https://hackage.haskell.org/package/pandoc-types-1.17.0.5/docs/Text-Pandoc-Definition.html#t:Attr
+    #
+    # @!attribute id
+    #   @return [String]
+    #
+    # @!attribute classes
+    #   @return [Array<String>]
+    class Attr
+      include Enumerable
 
-            attr_accessor :id, :classes
+      attr_accessor :id, :classes
 
-            # Create a new attributes object
-            #
-            # @param attributes [Array = []] the attributes as [id, [class names],
-            #   [key-value pairs]]
-            def initialize(attributes = [])
-                id, classes, data = attributes
-          
-                @id = id || ""
+      # Create a new attributes object
+      #
+      # @param attributes [Array = []] the attributes as [id, [class names],
+      #   [key-value pairs]]
+      def initialize(attributes = [])
+        id, classes, data = attributes
 
-                @classes = classes || []
-                @classes = [@classes] unless @classes.is_a? Array
+        @id = id || ''
 
-                @data = Hash[data] || {}
-            end
+        @classes = classes || []
+        @classes = [@classes] unless @classes.is_a? Array
 
-            # For each key-value pair of this attributes object
-            def each
-                @data.each
-            end
+        @data = data.to_h
+      end
 
-            # Get the value for key in this attributes object
-            #
-            # @param key [String] the key to get the value for. Nil if it does
-            # not exists
-            def [](key) 
-                if @data.key? key
-                    @data[key]
-                end 
-            end
+      # For each key-value pair of this attributes object
+      def each
+        @data.each
+      end
 
-            # Does this attributes object have this key?
-            #
-            # @param name [String] key to find
-            #
-            # @return [Boolean] true if this key exist, false otherwise
-            def has_key?(name)
-                @data.key? name
-            end
+      # Get the value for key in this attributes object
+      #
+      # @param key [String] the key to get the value for. Nil if it does
+      # not exists
+      def [](key)
+        return unless @data.key? key
 
-            # Does this attributes object have a class?
-            #
-            # @param name [String] the class name to search for.
-            #
-            # @return [Boolean] true if this class name exist, false
-            #   otherwise.
-            def has_class?(name)
-                @classes.include? name
-            end
+        @data[key]
+      end
 
-            # Convert this attributes object to an AST representation
-            #
-            # @return [Array] Array containing id, class name list, and
-            #   key-value pair list
-            def to_ast
-                [
-                    @id,
-                    @classes,
-                    @data.to_a
-                ]
-            end
-        end
+      # Does this attributes object have this key?
+      #
+      # @param name [String] key to find
+      #
+      # @return [Boolean] true if this key exist, false otherwise
+      def has_key?(name)
+        @data.key? name
+      end
+
+      alias key? has_key?
+
+      # Does this attributes object have a class?
+      #
+      # @param name [String] the class name to search for.
+      #
+      # @return [Boolean] true if this class name exist, false
+      #   otherwise.
+      def has_class?(name)
+        @classes.include? name
+      end
+
+      alias class? has_class?
+
+      # Convert this attributes object to an AST representation
+      #
+      # @return [Array] Array containing id, class name list, and
+      #   key-value pair list
+      def to_ast
+        [
+          @id,
+          @classes,
+          @data.to_a
+        ]
+      end
     end
+  end
 end

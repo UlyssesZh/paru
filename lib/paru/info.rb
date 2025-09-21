@@ -1,5 +1,5 @@
 #--
-# Copyright 2022 Huub de Beer <Huub@heerdebeer.org>
+# Copyright 2022-2025 Huub de Beer <Huub@heerdebeer.org>
 #
 # This file is part of Paru
 #
@@ -18,7 +18,8 @@
 #++
 
 # frozen_string_literal: false
-require_relative "error.rb"
+
+require_relative 'error'
 
 module Paru
   # Information about pandoc
@@ -38,51 +39,49 @@ module Paru
     #
     # @param path [String] the path to pandoc. Defaults to 'pandoc', i.e.,
     # assumes it's on the environment's path.
-    def initialize(path = "pandoc")
-      begin
-        # Get pandoc's version information
-        version_string = ''
-        IO.popen("#{path} --version", 'r+') do |p|
-          p.close_write
-          version_string << p.read
-        end
-
-        # Extract the version as an array of integers, like SemVer.
-        @version = version_string
-          .match(/pandoc.* (\d+\.\d+.*)$/)[1]
-          .split(".")
-          .map {|s| s.to_i}
-
-        # Extract the data directory
-        @data_dir = version_string.match(/User data directory: (.+)$/)[1]
-
-        # Extract scripting engine
-        @scripting_engine = version_string.match(/Scripting engine: (.+)$/)[1]
-      rescue StandardError => err
-        warn "Error extracting pandoc's information: #{err.message}"
-        warn "Using made up values instead."
-
-        @version = @version || [2, 18]
-        @data_dir = @data_dir || "."
-        @scripting_engine = @scripting_engine || "Lua 5.4"
+    def initialize(path = 'pandoc')
+      # Get pandoc's version information
+      version_string = ''
+      IO.popen("#{path} --version", 'r+') do |p|
+        p.close_write
+        version_string << p.read
       end
+
+      # Extract the version as an array of integers, like SemVer.
+      @version = version_string
+                 .match(/pandoc.* (\d+\.\d+.*)$/)[1]
+                 .split('.')
+                 .map(&:to_i)
+
+      # Extract the data directory
+      @data_dir = version_string.match(/User data directory: (.+)$/)[1]
+
+      # Extract scripting engine
+      @scripting_engine = version_string.match(/Scripting engine: (.+)$/)[1]
+    rescue StandardError => e
+      warn "Error extracting pandoc's information: #{e.message}"
+      warn 'Using made up values instead.'
+
+      @version ||= [2, 18]
+      @data_dir ||= '.'
+      @scripting_engine ||= 'Lua 5.4'
     end
 
     # Get pandoc's info by key like a Hash for backwards compatability.
     #
     # @deprecated Use Info's getters instead.
-    # 
+    #
     # @param key [String|Symbol] the key for the information to look up.
     # Info only supports keys 'version' and 'data_dir'.
     # @return [Any] Information associated with the key.
     # @raise [Error] for an unknown key.
     def [](key)
       case key
-      when "verion", :version
+      when 'verion', :version
         version
-      when "data_dir", :data_dir
+      when 'data_dir', :data_dir
         data_dir
-      when "scripting_engine", :scripting_engine
+      when 'scripting_engine', :scripting_engine
         scripting_engine
       else
         throw Error.new "Info does not know key '#{key}'"

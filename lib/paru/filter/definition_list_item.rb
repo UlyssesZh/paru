@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 #--
-# Copyright 2015, 2016 Huub de Beer <Huub@heerdebeer.org>
+# Copyright 2015--2025 Huub de Beer <Huub@heerdebeer.org>
 #
 # This file is part of Paru
 #
@@ -16,54 +18,54 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./block.rb"
-require_relative "./list.rb"
-require_relative "./inline.rb"
+require_relative 'block'
+require_relative 'list'
+require_relative 'inline'
 
 module Paru
-    module PandocFilter
-        # A DefinitionListItem is a helper node to represent the pair of a term
-        # and its definition in a DefinitionList
-        #
-        # @!attribute term
-        #   @return [Block]
-        #
-        # @!attribute definition
-        #   @return [List]
-        class DefinitionListItem < Block
-            attr_accessor :term, :definition
+  module PandocFilter
+    # A DefinitionListItem is a helper node to represent the pair of a term
+    # and its definition in a DefinitionList
+    #
+    # @!attribute term
+    #   @return [Block]
+    #
+    # @!attribute definition
+    #   @return [List]
+    class DefinitionListItem < Block
+      attr_accessor :term, :definition
 
-            # Create a new DefinitionListItem 
-            #
-            # @param item [Array] the [term, definition]
-            def initialize(item)
-                super []
+      # Create a new DefinitionListItem
+      #
+      # @param item [Array] the [term, definition]
+      def initialize(item)
+        super([])
 
-                @term = Block.new item[0]
-                @term.parent = self
-                @children << @term
+        @term = Block.new item[0]
+        @term.parent = self
+        @children << @term
 
-                @definition = List.new item[1]
-                @definition.parent = self
-                @children << @definition
-            end
+        @definition = List.new item[1]
+        @definition.parent = self
+        @children << @definition
+      end
 
-            # Create an AST representation of this DefinitionListItem
-            def to_ast
-                [
-                    @term.ast_contents,
-                    @definition.ast_contents
-                ]
-            end
+      # Create an AST representation of this DefinitionListItem
+      def to_ast
+        [
+          @term.ast_contents,
+          @definition.ast_contents
+        ]
+      end
 
-            # Convert this DefinitionListItem to a pair of term and definition
-            #
-            # @return [Array]
-            def to_array
-                term = @term.children.map{|c| c.markdown.strip}.select{|c| !c.empty?}.join(" ").strip
-                definition = @definition.children.map{|c| c.children.map{|d| d.markdown}}.join("\n").strip
-                [term, definition]
-            end
-        end
+      # Convert this DefinitionListItem to a pair of term and definition
+      #
+      # @return [Array]
+      def to_array
+        term = @term.children.map { |c| c.markdown.strip }.reject(&:empty?).join(' ').strip
+        definition = @definition.children.map { |c| c.children.map(&:markdown) }.join("\n").strip
+        [term, definition]
+      end
     end
+  end
 end

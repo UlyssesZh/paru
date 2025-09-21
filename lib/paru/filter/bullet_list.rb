@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 #--
-# Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
+# Copyright 2015--2025 Huub de Beer <Huub@heerdebeer.org>
 #
 # This file is part of Paru
 #
@@ -16,22 +18,21 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./list.rb"
+require_relative 'list'
 
 module Paru
-    module PandocFilter
-        # BulletList, contains a list of list of Block nodes.
-        class BulletList < List
-
-            # Create a new BulletList from an array of markdown strings
-            #
-            # @param items [String[]] array of markdown strings as items of
-            #   the new BulletList
-            # @return [BulletList]
-            def self.from_array(items)
-                ast_items = items.map {|item| [Block.from_markdown(item).to_ast]}
-                BulletList.new ast_items
-            end
-        end
+  module PandocFilter
+    # BulletList, contains a list of list of Block nodes.
+    class BulletList < List
+      # Create a new BulletList from an array of markdown strings
+      #
+      # @param items [String[]] array of markdown strings as items of
+      #   the new BulletList
+      # @return [BulletList]
+      def self.from_array(items)
+        ast_items = items.map { |item| [Block.from_markdown(item).to_ast] }
+        BulletList.new ast_items
+      end
     end
+  end
 end

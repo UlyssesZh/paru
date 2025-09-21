@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,24 +18,23 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./block.rb"
+require_relative 'block'
 
 module Paru
-    module PandocFilter
-        # An EmptyBlock, has not contents
-        class EmptyBlock < Block
+  module PandocFilter
+    # An EmptyBlock, has not contents
+    class EmptyBlock < Block
+      # Create an empty block
+      def initialize(_contents = [])
+        super([])
+      end
 
-            # Create an empty block
-            def initialize(contents = [])
-                super []
-            end
-
-            # Create an AST representation of this EmptyBlock
-            def to_ast
-                {
-                    "t" => ast_type
-                }
-            end
-        end
+      # Create an AST representation of this EmptyBlock
+      def to_ast
+        {
+          't' => ast_type
+        }
+      end
     end
+  end
 end

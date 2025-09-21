@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -17,34 +19,34 @@
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
 module Paru
-    module PandocFilter
-        # A Target represents the target of a link or image
-        #
-        # @!attribute url
-        #   @return [String] the target
-        #
-        # @!attribute title
-        #   @return [String] the title of the target
-        class Target
-            attr_accessor :url, :title
+  module PandocFilter
+    # A Target represents the target of a link or image
+    #
+    # @!attribute url
+    #   @return [String] the target
+    #
+    # @!attribute title
+    #   @return [String] the title of the target
+    class Target
+      attr_accessor :url, :title
 
-            # Create a new Target based on the contents
-            #
-            # @param contents [Array]
-            def initialize(contents)
-                @url = contents[0]
-                @title = contents[1]
-            end
+      # Create a new Target based on the contents
+      #
+      # @param contents [Array]
+      def initialize(contents)
+        @url = contents[0]
+        @title = contents[1]
+      end
 
-            # Create an AST representation of this Target
-            #
-            # @return [Array]
-            def to_ast()
-                [
-                    @url,
-                    @title
-                ]
-            end
-        end
+      # Create an AST representation of this Target
+      #
+      # @return [Array]
+      def to_ast
+        [
+          @url,
+          @title
+        ]
+      end
     end
+  end
 end

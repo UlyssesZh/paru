@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,19 +18,18 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./link.rb"
+require_relative 'link'
 
 module Paru
-    module PandocFilter
-        # An Image has an attribute object, a caption, and a target
-        class Image < Link
-
-            # Although Image is defined to be inline, probably because in HTML it
-            # can be an inline element, often it acts like a block element.
-            # @return [Boolean] true 
-            def can_act_as_both_block_and_inline?
-                true
-            end
-        end
+  module PandocFilter
+    # An Image has an attribute object, a caption, and a target
+    class Image < Link
+      # Although Image is defined to be inline, probably because in HTML it
+      # can be an inline element, often it acts like a block element.
+      # @return [Boolean] true
+      def can_act_as_both_block_and_inline?
+        true
+      end
     end
+  end
 end

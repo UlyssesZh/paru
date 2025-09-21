@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,49 +18,47 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./block.rb"
-require_relative "./inline.rb"
+require_relative 'block'
+require_relative 'inline'
 
 module Paru
-    module PandocFilter
-        # A List node is a base node for various List node types
-        class List < Block
+  module PandocFilter
+    # A List node is a base node for various List node types
+    class List < Block
+      # Create a new List node based on contents
+      #
+      # @param contents [Array] the contents of the list
+      # @param node_class [Node = PandocFilter::Block] the contents are {Inline} nodes
+      def initialize(contents, node_class = Block)
+        super([])
+        contents.each do |item|
+          child = node_class.new(item)
+          child.parent = self
 
-            # Create a new List node based on contents
-            #
-            # @param contents [Array] the contents of the list
-            # @param node_class [Node = PandocFilter::Block] the contents are {Inline} nodes
-            def initialize(contents, node_class = Block)
-                super []
-                contents.each do |item|
-                    child = node_class.new(item)
-                    child.parent = self
-
-                    @children.push child
-                end
-            end
-
-            # Create an AST representation of this List node
-            def ast_contents()
-                @children.map {|child| child.ast_contents}
-            end
-
-            # Has this List node block contents?
-            #
-            # @return [Boolean] true
-            def has_block?()
-                true
-            end
-
-            # Convert this List to an array of markdown strings
-            #
-            # @return [String[]]
-            def to_array()
-                @children.map do |block|
-                    block.children.map{|c| c.markdown.strip}.join("\n")
-                end
-            end
-
+          @children.push child
         end
+      end
+
+      # Create an AST representation of this List node
+      def ast_contents
+        @children.map(&:ast_contents)
+      end
+
+      # Has this List node block contents?
+      #
+      # @return [Boolean] true
+      def has_block?
+        true
+      end
+
+      # Convert this List to an array of markdown strings
+      #
+      # @return [String[]]
+      def to_array
+        @children.map do |block|
+          block.children.map { |c| c.markdown.strip }.join("\n")
+        end
+      end
     end
+  end
 end

@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 #--
-# Copyright 2020, 2023 Huub de Beer <Huub@heerdebeer.org>
+# Copyright 2020--2025 Huub de Beer <Huub@heerdebeer.org>
 #
 # This file is part of Paru
 #
@@ -16,60 +18,60 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./block.rb"
-require_relative "./value.rb"
-require_relative "./int_value.rb"
+require_relative 'block'
+require_relative 'value'
+require_relative 'int_value'
 
 module Paru
-    module PandocFilter
-        # A Cell node represents a cell in a table's head, body, or foot.
-        #  
-        # @!attribute attr
-        #   @return Attr
-        #
-        # @!attribute alignment
-        #   @return Value containing a String, one of AlignRight, AlignLeft,
-        #   AlignCenter, or AlignDefault.
-        #
-        # @!attribute rowspan
-        #   @return Value containing an Integer
-        #
-        # @!attribute colspan
-        #   @return Value containing an Integer
-        class Cell < Block
-            attr_accessor :attr, :alignment, :rowspan, :colspan
+  module PandocFilter
+    # A Cell node represents a cell in a table's head, body, or foot.
+    #
+    # @!attribute attr
+    #   @return Attr
+    #
+    # @!attribute alignment
+    #   @return Value containing a String, one of AlignRight, AlignLeft,
+    #   AlignCenter, or AlignDefault.
+    #
+    # @!attribute rowspan
+    #   @return Value containing an Integer
+    #
+    # @!attribute colspan
+    #   @return Value containing an Integer
+    class Cell < Block
+      attr_accessor :attr, :alignment, :rowspan, :colspan
 
-            # Create a new Cell based on the row_data
-            #
-            # @param contents [Array]
-            def initialize(contents)
-                @attr = Attr.new contents[0]
-                @alignment = Value.new contents[1]
-                @rowspan = IntValue.new contents[2]
-                @colspan = IntValue.new contents[3]
+      # Create a new Cell based on the row_data
+      #
+      # @param contents [Array]
+      def initialize(contents)
+        @attr = Attr.new contents[0]
+        @alignment = Value.new contents[1]
+        @rowspan = IntValue.new contents[2]
+        @colspan = IntValue.new contents[3]
 
-                super contents[4]
-            end
+        super(contents[4])
+      end
 
-            # The AST contents of this Cell
-            #
-            # @return [Array]
-            def ast_contents
-                [
-                  @attr.to_ast,
-                  @alignment.to_ast,
-                  @rowspan.to_ast,
-                  @colspan.to_ast,
-                  @children.map {|child| child.to_ast}
-                ]
-            end
+      # The AST contents of this Cell
+      #
+      # @return [Array]
+      def ast_contents
+        [
+          @attr.to_ast,
+          @alignment.to_ast,
+          @rowspan.to_ast,
+          @colspan.to_ast,
+          @children.map(&:to_ast)
+        ]
+      end
 
-            # Create an AST representation of this Node
-            #
-            # @return [Hash]
-            def to_ast()
-              ast_contents()
-            end
-        end
+      # Create an AST representation of this Node
+      #
+      # @return [Hash]
+      def to_ast
+        ast_contents
+      end
     end
+  end
 end

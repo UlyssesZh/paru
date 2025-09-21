@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -17,60 +19,59 @@
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
 module Paru
-    module PandocFilter
-        # ListAttributes represent the attributes of a list.
-        #
-        # @see http://hackage.haskell.org/package/pandoc-types-1.17.0.4/docs/Text-Pandoc-Definition.html#t:ListAttributes
-        #
-        # @!attribute start
-        #   @return [Integer]
-        #
-        # @!attribute number_style
-        #   @return [STYLES]
-        #
-        # @!attribute number_delim
-        #   @return [DELIMS]
-        class ListAttributes
-            
-            # The various styles of list numbers
-            STYLES = [
-                "DefaultStyle", 
-                "Example", 
-                "Decimal", 
-                "LowerRoman", 
-                "UpperRoman", 
-                "LowerAlpha", 
-                "UpperAlpha"
-            ]
+  module PandocFilter
+    # ListAttributes represent the attributes of a list.
+    #
+    # @see http://hackage.haskell.org/package/pandoc-types-1.17.0.4/docs/Text-Pandoc-Definition.html#t:ListAttributes
+    #
+    # @!attribute start
+    #   @return [Integer]
+    #
+    # @!attribute number_style
+    #   @return [STYLES]
+    #
+    # @!attribute number_delim
+    #   @return [DELIMS]
+    class ListAttributes
+      # The various styles of list numbers
+      STYLES = %w[
+        DefaultStyle
+        Example
+        Decimal
+        LowerRoman
+        UpperRoman
+        LowerAlpha
+        UpperAlpha
+      ].freeze
 
-            # The various delimeters of list numbers
-            DELIMS = [
-                "DefaultDelim", 
-                "Period", 
-                "OneParen", 
-                "TwoParens"
-            ]
+      # The various delimeters of list numbers
+      DELIMS = %w[
+        DefaultDelim
+        Period
+        OneParen
+        TwoParens
+      ].freeze
 
-            attr_accessor :start, :number_style, :number_delim
+      attr_accessor :start, :number_style, :number_delim
 
-            # Create a new ListAttribute object with attributes
-            #
-            # @param attributes [Array] an array with start, number style, and
-            #   number delimeter
-            def initialize(attributes)
-                @start = attributes[0]
-                @number_style = attributes[1]
-                @number_delim = attributes[2]
-            end
+      # Create a new ListAttribute object with attributes
+      #
+      # @param attributes [Array] an array with start, number style, and
+      #   number delimeter
+      def initialize(attributes)
+        @start = attributes[0]
+        @number_style = attributes[1]
+        @number_delim = attributes[2]
+      end
 
-            # Create an AST representation of this ListAttributes object
-            def to_ast()
-                [
-                    @start,
-                    @number_style,
-                    @number_delim
-                ]
-            end
-        end
+      # Create an AST representation of this ListAttributes object
+      def to_ast
+        [
+          @start,
+          @number_style,
+          @number_delim
+        ]
+      end
     end
+  end
 end

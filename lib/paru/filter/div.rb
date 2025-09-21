@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 #--
-# Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
+# Copyright 2015--2025 Huub de Beer <Huub@heerdebeer.org>
 #
 # This file is part of Paru
 #
@@ -16,45 +18,45 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./block.rb"
-require_relative "./attr.rb"
-require_relative "./inner_markdown.rb"
+require_relative 'block'
+require_relative 'attr'
+require_relative 'inner_markdown'
 
 module Paru
-    module PandocFilter
-        # A Div node consisting of an attribute object and a list of Block nodes.
-        class Div < Block
-            include InnerMarkdown
+  module PandocFilter
+    # A Div node consisting of an attribute object and a list of Block nodes.
+    class Div < Block
+      include InnerMarkdown
 
-            # A Div node has an attribute object
-            #
-            # @!attribute attr
-            #   @return [Attr]
-            attr_accessor :attr
+      # A Div node has an attribute object
+      #
+      # @!attribute attr
+      #   @return [Attr]
+      attr_accessor :attr
 
-            # Create a new Div node based on the contents
-            #
-            # @param contents [Array] an array containing the attribute object
-            #   and the contents of this div.
-            def initialize(contents)
-                @attr = Attr.new contents[0]
-                super contents[1]
-            end
+      # Create a new Div node based on the contents
+      #
+      # @param contents [Array] an array containing the attribute object
+      #   and the contents of this div.
+      def initialize(contents)
+        @attr = Attr.new contents[0]
+        super(contents[1])
+      end
 
-            # Create an AST representation of this Div node.
-            def ast_contents()
-                [
-                    @attr.to_ast,
-                    super
-                ]
-            end
+      # Create an AST representation of this Div node.
+      def ast_contents
+        [
+          @attr.to_ast,
+          super
+        ]
+      end
 
-            # Has this Div node Blocks as children?
-            #
-            # @return [Boolean] true
-            def has_block?
-                true
-            end
-        end
+      # Has this Div node Blocks as children?
+      #
+      # @return [Boolean] true
+      def has_block?
+        true
+      end
     end
+  end
 end

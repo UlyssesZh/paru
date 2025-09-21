@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2020 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,13 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./table_end.rb"
-    
-module Paru
-    module PandocFilter
+require_relative 'table_end'
 
-        # A TableHead node represents the heading of a table.
-        class TableHead < TableEnd
-        end
+module Paru
+  module PandocFilter
+    # A TableHead node represents the heading of a table.
+    class TableHead < TableEnd
     end
+  end
 end

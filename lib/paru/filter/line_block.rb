@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,18 +18,18 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #--
-require_relative "./list.rb"
+require_relative 'list'
 
 module Paru
-    module PandocFilter
-        # A LineBlock is a List of Lists of Inline nodes
-        class LineBlock < List
-            # Create a new LineBlock node based on contents
-            #
-            # @param contents [Array] the contents of the LineBlock
-            def initialize(contents)
-                super(contents, Para)
-            end
-        end
+  module PandocFilter
+    # A LineBlock is a List of Lists of Inline nodes
+    class LineBlock < List
+      # Create a new LineBlock node based on contents
+      #
+      # @param contents [Array] the contents of the LineBlock
+      def initialize(contents)
+        super(contents, Para)
+      end
     end
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -17,12 +19,11 @@
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
 module Paru
-    module PandocFilter
+  module PandocFilter
+    require_relative 'meta_value'
 
-        require_relative "./meta_value.rb"
-
-        # A MetaString Node represents a String value
-        class MetaString < MetaValue
-        end
+    # A MetaString Node represents a String value
+    class MetaString < MetaValue
     end
+  end
 end

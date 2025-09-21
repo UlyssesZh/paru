@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 #--
-# Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
+# Copyright 2015--2025 Huub de Beer <Huub@heerdebeer.org>
 #
 # This file is part of Paru
 #
@@ -16,20 +18,19 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./node.rb"
+require_relative 'node'
 
 module Paru
-    module PandocFilter
-        # A Block level node.
-        # @see https://hackage.haskell.org/package/pandoc-types-1.17.0.5/docs/Text-Pandoc-Definition.html#t:Block
-        class Block < Node
-
-            # Is this node a block?
-            #
-            # @return [Boolean] true
-            def is_block?
-                true
-            end
-        end
+  module PandocFilter
+    # A Block level node.
+    # @see https://hackage.haskell.org/package/pandoc-types-1.17.0.5/docs/Text-Pandoc-Definition.html#t:Block
+    class Block < Node
+      # Is this node a block?
+      #
+      # @return [Boolean] true
+      def is_block?
+        true
+      end
     end
+  end
 end

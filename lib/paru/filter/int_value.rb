@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2020 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,27 +18,26 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./node.rb"
-require_relative "../filter_error.rb"
+require_relative 'node'
+require_relative '../filter_error'
 
 module Paru
-    module PandocFilter
+  module PandocFilter
+    # An IntValue represents some sort of integer metadata about block or
+    # inline nodes
+    class IntValue
+      attr_accessor :value
 
-        # An IntValue represents some sort of integer metadata about block or
-        # inline nodes
-        class IntValue
-          attr_accessor :value
+      def initialize(value)
+        @value = value
+      end
 
-          def initialize(value)
-            @value = value
-          end
-
-          # Create an AST representation of this Node
-          #
-          # @return [Hash]
-          def to_ast()
-            @value
-          end
-        end
+      # Create an AST representation of this Node
+      #
+      # @return [Hash]
+      def to_ast
+        @value
+      end
     end
+  end
 end

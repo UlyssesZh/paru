@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
-require "paru/filter"
+# frozen_string_literal: true
 
-Paru::Filter.run do 
-    stop!
-    warn "Do not show this warning!"
+require 'paru/filter'
+
+Paru::Filter.run do
+  stop!
+  warn 'Do not show this warning!'
 end

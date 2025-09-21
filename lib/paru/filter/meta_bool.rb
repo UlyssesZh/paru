@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,12 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./meta_value.rb"
+require_relative 'meta_value'
 
 module Paru
-    module PandocFilter
-        # A MetaBool Note representa a Boolean value
-        class MetaBool < MetaValue
-        end
+  module PandocFilter
+    # A MetaBool Note representa a Boolean value
+    class MetaBool < MetaValue
     end
+  end
 end

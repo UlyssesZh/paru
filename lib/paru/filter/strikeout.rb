@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,13 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./inline.rb"
+require_relative 'inline'
 
 module Paru
-    module PandocFilter
-        # A Strikeout inline node
-        class Strikeout < Inline
-        end
+  module PandocFilter
+    # A Strikeout inline node
+    class Strikeout < Inline
     end
+  end
 end
-

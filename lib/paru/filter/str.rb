@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,43 +18,42 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./inline.rb"
+require_relative 'inline'
 
 module Paru
-    module PandocFilter
-        # A Str node represents a string
-        #
-        # @!attribute string
-        #   @return [String] the value of this Str node.
-        class Str < Inline
+  module PandocFilter
+    # A Str node represents a string
+    #
+    # @!attribute string
+    #   @return [String] the value of this Str node.
+    class Str < Inline
+      attr_accessor :string
 
-            attr_accessor :string
+      # Create a new Str node based on the value
+      #
+      # @param value [String]
+      def initialize(value)
+        @string = value
+      end
 
-            # Create a new Str node based on the value
-            #
-            # @param value [String]
-            def initialize(value)
-                @string = value
-            end
+      # The AST contents
+      def ast_contents
+        @string
+      end
 
-            # The AST contents
-            def ast_contents()
-                @string
-            end
+      # Has the Str node a string value? Of course!
+      #
+      # @return [Boolean] true
+      def has_string?
+        true
+      end
 
-            # Has the Str node a string value? Of course!
-            #
-            # @return [Boolean] true
-            def has_string?()
-                true
-            end
-
-            # Has the Str node inline contents? 
-            #
-            # @return [Boolean] false
-            def has_inline?()
-                false
-            end
-        end
+      # Has the Str node inline contents?
+      #
+      # @return [Boolean] false
+      def has_inline?
+        false
+      end
     end
+  end
 end

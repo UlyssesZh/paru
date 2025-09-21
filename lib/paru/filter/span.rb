@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #--
 # Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
 #
@@ -16,36 +18,36 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require_relative "./inline.rb"
-require_relative "./attr.rb"
+require_relative 'inline'
+require_relative 'attr'
 
 module Paru
-    module PandocFilter
-        # A Span node is a general Inline level node with attributes and
-        # contens
-        #
-        # @!attribute attr
-        #   @return [Attr]
-        class Span < Inline
-            attr_accessor :attr
+  module PandocFilter
+    # A Span node is a general Inline level node with attributes and
+    # contens
+    #
+    # @!attribute attr
+    #   @return [Attr]
+    class Span < Inline
+      attr_accessor :attr
 
-            # Create a new Span node based on the contents
-            #
-            # @param contents [Array]
-            def initialize(contents)
-                @attr = Attr.new contents[0]
-                super contents[1]
-            end
+      # Create a new Span node based on the contents
+      #
+      # @param contents [Array]
+      def initialize(contents)
+        @attr = Attr.new contents[0]
+        super(contents[1])
+      end
 
-            # The AST contents
-            #
-            # @return [Array]
-            def ast_contents()
-                [
-                    @attr.to_ast,
-                    super
-                ]
-            end
-        end
+      # The AST contents
+      #
+      # @return [Array]
+      def ast_contents
+        [
+          @attr.to_ast,
+          super
+        ]
+      end
     end
+  end
 end

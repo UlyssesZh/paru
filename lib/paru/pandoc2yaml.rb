@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 #--
-# Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
+# Copyright 2015--2025 Huub de Beer <Huub@heerdebeer.org>
 #
 # This file is part of Paru
 #
@@ -16,56 +18,63 @@
 # You should have received a copy of the GNU General Public License
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require "json"
-require_relative "./pandoc.rb"
+require 'json'
+require_relative 'pandoc'
 
 module Paru
-    # Utility class to extract YAML metadata form a markdown file in pandoc's
-    # own markdown format.
-    class Pandoc2Yaml
-        # Paru converters:
-        # Note. When converting metadata back to the pandoc markdown format, you have
-        # to use the option "standalone", otherwise the metadata is skipped
+  # Utility class to extract YAML metadata form a markdown file in pandoc's
+  # own markdown format.
+  class Pandoc2Yaml
+    # Paru converters:
+    # Note. When converting metadata back to the pandoc markdown format, you have
+    # to use the option "standalone", otherwise the metadata is skipped
 
-        # Converter from pandoc's markdown to pandoc's AST JSON
-        PANDOC_2_JSON = Paru::Pandoc.new {from "markdown"; to "json"}
-
-        # Converter from pandoc's AST JSON back to pandoc. Note the
-        # 'standalone' property, which is needed to output the metadata as
-        # well.
-        JSON_2_PANDOC = Paru::Pandoc.new {from "json"; to "markdown"; standalone}
-
-        # When converting a pandoc document to JSON, or vice versa, the JSON object
-        # has the following three properties:
-        
-        # Pandoc-type API version key
-        VERSION = "pandoc-api-version"
-        # Meta block key
-        META = "meta"
-        # Content's blocks key
-        BLOCKS = "blocks"
-
-        # Extract the YAML metadata from input document
-        #
-        # @param input_document [String] path to input document
-        # @return [String] YAML metadata from input document on STDOUT
-        def self.extract_metadata input_document
-            json = JSON.parse(PANDOC_2_JSON << File.read(input_document))
-            yaml = ""
-
-            version, metadata = json.values_at(VERSION, META)
-
-            if not metadata.empty? then
-                metadata_document = {
-                    VERSION => version, 
-                    META => metadata, 
-                    BLOCKS => []
-                }
-
-                yaml = JSON_2_PANDOC << JSON.generate(metadata_document)
-            end
-
-            yaml
-        end
+    # Converter from pandoc's markdown to pandoc's AST JSON
+    PANDOC_2_JSON = Paru::Pandoc.new do
+      from 'markdown'
+      to 'json'
     end
+
+    # Converter from pandoc's AST JSON back to pandoc. Note the
+    # 'standalone' property, which is needed to output the metadata as
+    # well.
+    JSON_2_PANDOC = Paru::Pandoc.new do
+      from 'json'
+      to 'markdown'
+      standalone
+    end
+
+    # When converting a pandoc document to JSON, or vice versa, the JSON object
+    # has the following three properties:
+
+    # Pandoc-type API version key
+    VERSION = 'pandoc-api-version'
+    # Meta block key
+    META = 'meta'
+    # Content's blocks key
+    BLOCKS = 'blocks'
+
+    # Extract the YAML metadata from input document
+    #
+    # @param input_document [String] path to input document
+    # @return [String] YAML metadata from input document on STDOUT
+    def self.extract_metadata(input_document)
+      json = JSON.parse(PANDOC_2_JSON << File.read(input_document))
+      yaml = ''
+
+      version, metadata = json.values_at(VERSION, META)
+
+      unless metadata.empty?
+        metadata_document = {
+          VERSION => version,
+          META => metadata,
+          BLOCKS => []
+        }
+
+        yaml = JSON_2_PANDOC << JSON.generate(metadata_document)
+      end
+
+      yaml
+    end
+  end
 end

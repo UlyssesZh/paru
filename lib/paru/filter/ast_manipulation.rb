@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 #--
-# Copyright 2015, 2016, 2017 Huub de Beer <Huub@heerdebeer.org>
+# Copyright 2015--2025 Huub de Beer <Huub@heerdebeer.org>
 #
 # This file is part of Paru
 #
@@ -17,107 +19,104 @@
 # along with Paru.  If not, see <http://www.gnu.org/licenses/>.
 #++
 module Paru
-    module PandocFilter
-        # ASTManipulation is a mixin for Node with some standard tree
-        # manipulation methods such as inserting or removing nodes, replacing
-        # nodes, and so on.
-        module ASTManipulation
+  module PandocFilter
+    # ASTManipulation is a mixin for Node with some standard tree
+    # manipulation methods such as inserting or removing nodes, replacing
+    # nodes, and so on.
+    module ASTManipulation
+      # Find index of child
+      #
+      # @param child [Node] the child to find the index for
+      #
+      # @return [Number] the index of child or nil
+      def find_index(child)
+        @children.find_index child
+      end
 
-            # Find index of child
-            #
-            # @param child [Node] the child to find the index for
-            #
-            # @return [Number] the index of child or nil
-            def find_index(child)
-                @children.find_index child
-            end
+      # Get the child node at index
+      #
+      # @param index [Number] the index of the child to get
+      #
+      # @return [Node] the child at index
+      def get(index)
+        @children[index]
+      end
 
+      # Insert child node among this node's children at position index.
+      #
+      # @param index [Integer] the position to insert the child
+      # @param child [Node] the child to insert
+      def insert(index, child)
+        @children.insert index, child
+      end
 
-            # Get the child node at index
-            #
-            # @param index [Number] the index of the child to get
-            #
-            # @return [Node] the child at index
-            def get(index)
-                @children[index]
-            end
+      # Delete child from this node's children.
+      #
+      # @param child [Node] the child node to delete.
+      def delete(child)
+        @children.delete child
+      end
 
-            # Insert child node among this node's children at position index.
-            #
-            # @param index [Integer] the position to insert the child
-            # @param child [Node] the child to insert
-            def insert(index, child)
-                @children.insert index, child
-            end
+      # Remove the child at position index from this node's children
+      #
+      # @param index [Integer] the position of the child to remove
+      def remove_at(index)
+        @children.delete_at index
+      end
 
-            # Delete child from this node's children.
-            #
-            # @param child [Node] the child node to delete.
-            def delete(child)
-                @children.delete child
-            end
+      # Append a child to the list with this node's children.
+      #
+      # @param child [Node] the child to append.
+      def append(child)
+        @children.push child
+      end
+      alias << append
 
-            # Remove the child at position index from this node's children
-            #
-            # @param index [Integer] the position of the child to remove
-            def remove_at(index)
-                @children.delete_at index
-            end 
+      # Prepend a child to the list with this node's children.
+      #
+      # @param child [Node] the child to prepend.
+      def prepend(child)
+        insert 0, child
+      end
 
-            # Append a child to the list with this node's children.
-            #
-            # @param child [Node] the child to append.
-            def append(child)
-                @children.push child
-            end
-            alias << append
+      # Replace a child from this node's children with a new child.
+      #
+      # @param old_child [Node] the child to replace
+      # @param new_child [Node] the replacement child
+      def replace(old_child, new_child)
+        old_child_index = find_index old_child
+        return unless old_child_index
 
-            # Prepend a child to the list with this node's children.
-            #
-            # @param child [Node] the child to prepend.
-            def prepend(child)
-                insert 0, child
-            end
+        replace_at old_child_index, new_child
+      end
 
-            # Replace a child from this node's children with a new child.
-            #
-            # @param old_child [Node] the child to replace
-            # @param new_child [Node] the replacement child
-            def replace(old_child, new_child)
-                old_child_index = find_index old_child
-                if old_child_index then
-                    replace_at old_child_index, new_child
-                end
-            end
+      # Replace the child at position index from this node's children
+      # with a new child.
+      #
+      # @param index [Integer] the position of the child to replace
+      # @param new_child [Node] the replacement child
+      def replace_at(index, new_child)
+        @children[index] = new_child
+      end
 
-            # Replace the child at position index from this node's children
-            # with a new child.
-            #
-            # @param index [Integer] the position of the child to replace
-            # @param new_child [Node] the replacement child
-            def replace_at(index, new_child)
-                @children[index] = new_child
-            end
+      # Walk the node tree starting at this node, depth first, and apply
+      # block to each node in the tree
+      #
+      # @param block [Proc] the block to apply to each node in this node
+      #   tree
+      #
+      # @yield [Node]
+      def each_depth_first(&block)
+        yield self
 
-            # Walk the node tree starting at this node, depth first, and apply
-            # block to each node in the tree
-            #
-            # @param block [Proc] the block to apply to each node in this node
-            #   tree
-            #
-            # @yield [Node]
-            def each_depth_first(&block)    
-                yield self
+        node = if has_been_replaced?
+                 get_replacement
+               else
+                 self
+               end
 
-                if has_been_replaced?
-                    node = get_replacement
-                else
-                    node = self
-                end
-
-                node.each {|child| child.each_depth_first(&block)} if node.has_children?
-            end
-
-        end
+        node.each { |child| child.each_depth_first(&block) } if node.has_children?
+      end
     end
+  end
 end
