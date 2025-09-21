@@ -1,11 +1,8 @@
 #!/usr/bin/env ruby
-require "paru/filter"
+require 'paru/filter'
 
-Paru::Filter.run do 
-    with "HorizontalRule" do |rule|
-
-        if rule.has_parent? then
-            rule.parent.delete rule
-        end
-    end
+Paru::Filter.run do
+  with 'HorizontalRule' do |rule|
+    rule.parent.delete rule if rule.has_parent?
+  end
 end

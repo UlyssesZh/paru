@@ -5,15 +5,15 @@ example, you insert the code of that filter here as follows:
 
 ``` .ruby
 #!/usr/bin/env ruby
-require "paru/filter"
+require 'paru/filter'
 
-Paru::Filter.run do 
-  with "CodeBlock" do |code_block|
-    command, path, *classes = code_block.string.strip.split " "
-    if command == "::paru::insert"
-      code_block.string = File.read path.gsub(/\\_/, "_")
+Paru::Filter.run do
+  with 'CodeBlock' do |code_block|
+    command, path, *classes = code_block.string.strip.split ' '
+    if command == '::paru::insert'
+      code_block.string = File.read path.gsub('\\_', '_')
       code_block.string.force_encoding('UTF-8')
-      classes.each {|c| code_block.attr.classes.push c}
+      classes.each { |c| code_block.attr.classes.push c }
     end
   end
 end

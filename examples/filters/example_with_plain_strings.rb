@@ -4,7 +4,7 @@ require 'paru/filter'
 
 example_count = 0
 
-Paru::Filter.run do
+Paru::Filter.run(treat_metadata_strings_as_plain_strings: true) do
   with 'Div.example > Header' do |header|
     if header.level == 3
       example_count += 1

@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
-require "paru/filter"
+require 'paru/filter'
 
-Paru::Filter.run do 
+Paru::Filter.run do
   before do
-    metadata.delete "pandoc"
+    metadata.delete 'pandoc'
   end
 end

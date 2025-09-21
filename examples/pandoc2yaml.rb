@@ -10,31 +10,38 @@
 #
 ##
 module Pandoc2Yaml
-  require "json"
-  require "paru/pandoc"
+  require 'json'
+  require 'paru/pandoc'
 
   # Paru converters:
   # Note. When converting metadata back to the pandoc markdown format, you have
   # to use the option "standalone", otherwise the metadata is skipped
-  PANDOC_2_JSON = Paru::Pandoc.new {from "markdown"; to "json"}
-  JSON_2_PANDOC = Paru::Pandoc.new {from "json"; to "markdown"; standalone}
+  PANDOC_2_JSON = Paru::Pandoc.new do
+    from 'markdown'
+    to 'json'
+  end
+  JSON_2_PANDOC = Paru::Pandoc.new do
+    from 'json'
+    to 'markdown'
+    standalone
+  end
 
   # When converting a pandoc document to JSON, or vice versa, the JSON object
   # has the following three properties:
-  VERSION = "pandoc-api-version"
-  META = "meta"
-  BLOCKS = "blocks"
+  VERSION = 'pandoc-api-version'
+  META = 'meta'
+  BLOCKS = 'blocks'
 
-  def extract_metadata input_document
+  def extract_metadata(input_document)
     json = JSON.parse(PANDOC_2_JSON << File.read(input_document))
-    yaml = ""
+    yaml = ''
 
     version, metadata = json.values_at(VERSION, META)
 
-    if not metadata.empty? then
+    unless metadata.empty?
       metadata_document = {
-        VERSION => version, 
-        META => metadata, 
+        VERSION => version,
+        META => metadata,
         BLOCKS => []
       }
 
@@ -48,8 +55,8 @@ end
 if __FILE__ == $0
   include Pandoc2Yaml
 
-  if ARGV.size != 1 then
-    warn "Expecting exactly one argument: the pandoc file to strip for metadata"
+  if ARGV.size != 1
+    warn 'Expecting exactly one argument: the pandoc file to strip for metadata'
     exit
   end
 

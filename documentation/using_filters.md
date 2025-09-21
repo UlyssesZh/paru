@@ -242,3 +242,39 @@ is run by `do-pandoc.rb`.
 For more information about manipulating metadata, see [the API documentation
 of the
 MetaMap](https://heerdebeer.org/Software/markdown/paru/documentation/api-doc/Paru/PandocFilter/MetaMap.html).
+
+### Using simple strings only in metadata
+
+If you're using pandoc markdown and have metadata in title blocks or YAML
+blocks, metadata string values will be parsed as pandoc's markdown. In the AST
+representation of your document, they have types `MetaInlines` or
+`MetaBlocks`. Paru uses pandoc to convert these AST nodes into a string
+representation to offer you access to the metadata strings as markdown
+strings.
+
+However, running a separate pandoc process to convert metadata to strings is
+expensive. Particularly so when you don't use pandoc's title blocks or YAML
+blocks. If you're setting metadata only via the command-line option
+`--metadata`, pandoc parses these string values as `MetaString` type values.
+These strings are basically plain text. 
+
+In this situation, it is a waste to use pandoc to
+convert the strings to strings as the result strings are the same as the
+source strings. Use feature toggle `treat_metadata_strings_as_plain_strings`
+to change paru's default behavior of using pandoc to convert metadata strings
+to strings. Instead, when this toggle is on, paru uses the strings as is
+without a conversion step.
+
+**Note** Whenever there's a single non-`MetaString` metadata string value in
+your metadata, this option won't have an effect. Then the default behavior is
+used instead. In other words, when you mix setting metadata via command-line
+options and title or YAML blocks, this toggle doesn't have an effect.
+
+In other words, this feature toggle is mostly useful when you're *not* using
+pandoc's own markdown format in your conversion or filters.
+
+To use this feature toggle, add argument
+`treat_metadata_strings_as_plain_strings: true` when calling the filter
+constructor or method `Filter#run`. For example:
+
+    ::paru::insert ../examples/filters/example_with_plain_strings.rb ruby
