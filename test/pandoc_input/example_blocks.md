@@ -10,12 +10,12 @@ something similar in markdown, I wrote the `example.rb` filter.
 ### Adding your first example
 
 Create an example block as follows:
-~~~{.markdown}
+``` markdown
 <div class="example">
 ### My first example!!
 My first example is about creating my first example
 </div>
-~~~
+```
 </div>
 
 <div class="important">

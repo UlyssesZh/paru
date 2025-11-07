@@ -23,6 +23,6 @@ Gem::Specification.new do |s|
   s.files += Dir['lib/paru/*.rb']
   s.files += Dir['lib/paru/filter/*.rb']
 
-  s.add_runtime_dependency 'csv', '~> 3.3'
+  s.add_dependency 'csv', '~> 3.3'
   s.metadata['rubygems_mfa_required'] = 'true'
 end
