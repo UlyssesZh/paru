@@ -76,7 +76,7 @@ running the following commands:
 cd /path/to/paru/repository
 bundle install
 rake build
-gem install pkg/paru-1.5.1.gem
+gem install pkg/paru-1.5.2.gem
 ```
 
 Paru, obviously, requires pandoc. See

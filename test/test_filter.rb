@@ -643,7 +643,7 @@ class FilterTest < Minitest::Test
       end
     end
 
-    expected = <<~END
+    expected = <<~END_EXPECTED
       before
       during
       during
@@ -657,7 +657,7 @@ class FilterTest < Minitest::Test
       during
       during
       after
-    END
+    END_EXPECTED
 
     assert_equal expected, err
   end
@@ -669,5 +669,15 @@ class FilterTest < Minitest::Test
     end
 
     assert_equal(1, blocks)
+  end
+
+  def test_consecutive_block_replacements
+    result = filter_string "a\n\na" do
+      with 'Para' do |p|
+        p.markdown = '</p>'
+      end
+    end.strip
+
+    assert_equal("</p>\n</p>", result)
   end
 end

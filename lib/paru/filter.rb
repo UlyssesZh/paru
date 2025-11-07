@@ -318,11 +318,11 @@ module Paru
 
       nodes_to_filter.each do |node|
         if @current_node.has_been_replaced?
-          @current_node = @current_node.get_replacement
           @filtered_nodes.pop
-        else
-          @current_node = node
+          @filtered_nodes.push @current_node.get_replacement
         end
+          
+        @current_node = node
 
         @filtered_nodes.push @current_node
 
